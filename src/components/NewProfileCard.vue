@@ -1,46 +1,44 @@
 <template>
   <div class="profile">
     <div class="card">
-      <DoctorIcon class="avatar"/>
+      <DoctorIcon class="avatar" />
       <div class="data">
         <div class="profile-content">
           <div>
-            <BaseInput  
-                label="name:"
-                type="text"
-                :rule="{ regex: /^[a-z0-9]+$/i }"
-                v-model="newProfile.name"
+            <BaseInput
+              label="name:"
+              type="text"
+              :rule="{ regex: /^[a-z0-9]+$/i }"
+              v-model="newProfile.name"
             />
             <!-- <strong>{{profile.name}}</strong> -->
             <!-- <a :href="profile.email" class="email">{{profile.email}}</a> -->
-            <BaseInput  
-                label="email:"
-                type="email"
-                rule="email"
-                v-model="newProfile.email"
+            <BaseInput
+              label="email:"
+              type="email"
+              rule="email"
+              v-model="newProfile.email"
             />
           </div>
-          <BaseInput  
+          <BaseInput
             label="description:"
             type="text"
             :rule="{ regex: /^[a-z0-9]+$/i }"
             v-model="newProfile.description"
-            />
+          />
           <!-- <div class="description">{{profile.description}}</div> -->
         </div>
         <div class="footer-card">
-          <div class="likes">
+          <div class="likes" >
             <span class="likes-icon">💚</span>
-            <span class="likes-value">{{newProfile.likes}}</span>
+            <span class="likes-value">{{ newProfile.likes }}</span>
           </div>
-          <button class="submit-btn" @click="submit">
-            save
-          </button>
+          <button class="submit-btn" @click="submit">save</button>
         </div>
       </div>
     </div>
     <div class="comment">
-      <input class="comment-input" placeholder="Write your comment...">
+      <input class="comment-input" placeholder="Write your comment..." />
     </div>
   </div>
 </template>
@@ -54,33 +52,44 @@ export default {
 
   components: {
     DoctorIcon,
-    BaseInput
+    BaseInput,
   },
 
   props: {
     profile: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
 
-  data(){
+  data() {
     return {
-      newProfile:{
+      newProfile: {
         id: this.profile.id,
-        name: this.profile.name || '',
-        email: this.profile.email || '',
-        description: this.profile.description ||'',
-        likes:0,
-      }
-    }
+        name: this.profile.name || "",
+        email: this.profile.email || "",
+        description: this.profile.description || "",
+        likes: 0,
+      },
+    };
   },
 
-  methods:{
-    submit(){
-      this.$emit('save', this.newProfile)
-    }
-  }
+  methods: {
+    submit() {
+      if (
+        this.newProfile.name &&
+        this.newProfile.email &&
+        this.newProfile.description &&
+        /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/.test(this.newProfile.email) &&
+        /^[a-z0-9]+$/i.test(this.newProfile.name)
+      ) {
+        this.$emit("save", this.newProfile);
+      } else {
+        alert("فیلد ها باید  به درستی پر باشند");
+      }
+    },
+
+  },
 };
 </script>
 
@@ -130,6 +139,7 @@ export default {
 .likes {
   color: rgb(76, 202, 114);
   margin-left: 15px;
+  cursor: pointer;
 }
 
 .likes-value {
@@ -144,17 +154,17 @@ export default {
 .comment-input {
   width: 100%;
 }
-.footer-card{
+.footer-card {
   margin-top: 10px;
   display: flex;
   width: 100%;
   align-items: center;
   justify-content: space-between;
 }
-.submit-btn{
+.submit-btn {
   display: block;
   padding: 3px 6px;
-  background-color: #41B883;
+  background-color: #41b883;
   border: 1px solid;
   color: #fff;
   cursor: pointer;

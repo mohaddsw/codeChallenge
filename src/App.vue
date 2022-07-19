@@ -3,14 +3,8 @@
     <div class="header">Profiles List</div>
     <div class="content">
       <div class="tool-bar">
-        <BaseInput
-          class="filter"
-          label="search:"
-          v-model="searchQuery"
-        />
-        <button class="add-item" @click="addItem">
-          add
-        </button>
+        <BaseInput class="filter" label="search:" v-model="searchQuery" />
+        <button class="add-item" @click="addItem">add</button>
       </div>
       <div class="buttons">
         <button @click="sortAsc">▲</button>
@@ -24,18 +18,24 @@
         class="profile"
         @save="saveItem($event)"
       />
-      
+
       <ProfileCard
         v-for="profile in getFilteredList"
         :key="profile.id"
         :profile="profile"
         class="profile"
+        @likeDisLike="likeDisLike($event)"
       />
 
       <div class="icons-note">
         Icons made by
-        <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from
-        <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+        <a href="https://www.flaticon.com/authors/freepik" title="Freepik"
+          >Freepik</a
+        >
+        from
+        <a href="https://www.flaticon.com/" title="Flaticon"
+          >www.flaticon.com</a
+        >
       </div>
     </div>
   </div>
@@ -46,86 +46,106 @@ import ProfileCard from "./components/ProfileCard";
 import BaseInput from "./components/BaseComponent/BaseInput";
 import NewProfileCard from "./components/NewProfileCard";
 
-
 export default {
   name: "App",
 
   components: {
     ProfileCard,
     BaseInput,
-    NewProfileCard
+    NewProfileCard,
   },
 
   data() {
     return {
-      searchQuery:'',
+      searchQuery: "",
       profiles: [
         {
           id: 1,
           name: "Wojciech",
           email: "wojciech@poz.pl",
           description: "Anaesthesiologist",
-          likes: 34
+          likes: 34,
         },
         {
           id: 2,
           name: "Maria",
           email: "maria@poz.pl",
           description: "Radiologist",
-          likes: 28
+          likes: 28,
         },
         {
           id: 3,
           name: "Anna",
           email: "anna@poz.pl",
           description: "Surgeon",
-          likes: 53
-        }
+          likes: 53,
+        },
       ],
-      newProfiles: []
+      newProfiles: [],
     };
   },
+  created() {
+    this.addProperty();
+  },
 
-  computed:{
+  computed: {
     getFilteredList() {
       return this.profiles.filter((item) => {
-        return item ? item.name.toLowerCase().includes(this.searchQuery.toLowerCase()): null;
+        return item
+          ? item.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+          : null;
       });
     },
     factoryNewProfile() {
-      const lastId = this.profiles[this.profiles.length-1].id
+      const lastId = this.profiles[this.profiles.length - 1].id;
       return {
-          id: lastId + 1,
-          name: "",
-          email: "",
-          description: "",
-          likes: 0
-      }
+        id: lastId + 1,
+        name: "",
+        email: "",
+        description: "",
+        likes: 0,
+      };
     },
   },
 
   methods: {
     sortAsc() {
-      this.profiles.sort(function(a, b) {
+      this.profiles.sort(function (a, b) {
         return a.likes - b.likes;
       });
     },
 
     sortDesc() {
-      this.profiles.sort(function(a, b) {
+      this.profiles.sort(function (a, b) {
         return b.likes - a.likes;
       });
     },
-    addItem(){
-      this.newProfiles.push(Object.assign({},this.factoryNewProfile))
+    addItem() {
+      this.newProfiles.push(Object.assign({}, this.factoryNewProfile));
     },
-    saveItem(item){
-      const newItem = this.newProfiles.find(profile => profile.id === item.id)
-      Object.assign(newItem, item)
-      this.profiles = [ ...this.profiles, ...this.newProfiles]
-      this.newProfiles = []
-    }
-  }
+    saveItem(item) {
+      const newItem = this.newProfiles.find(
+        (profile) => profile.id === item.id
+      );
+      Object.assign(newItem, item);
+      this.profiles = [...this.profiles, ...this.newProfiles];
+      this.newProfiles = [];
+    },
+    addProperty() {
+      this.profiles.forEach((i) => {
+        i.liked = false;
+      });
+    },
+    likeDisLike(val) {
+      this.profiles.forEach((i) => {
+        if (i.id === val.id) {
+          let likesNum = i.likes;
+          i.likes = i.liked ? likesNum - 1 : likesNum + 1;
+          i.liked = !i.liked;
+        }
+      });
+    },
+  },
 };
 </script>
 
@@ -154,7 +174,7 @@ button {
   display: block;
   padding: 1em;
   width: 100%;
-  background-color: #41B883;
+  background-color: #41b883;
   border: 1px solid;
   color: #fff;
   cursor: pointer;
@@ -202,23 +222,23 @@ button {
   margin-top: 30px;
   font-size: 10px;
 }
-.filter{
+.filter {
   margin: 10px 0;
   display: flex;
   align-items: center;
   justify-content: flex-start;
 }
->>> .filter input{
+>>> .filter input {
   margin-left: 5px;
 }
-.tool-bar{
+.tool-bar {
   font-size: 18px;
   color: black;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.add-item{
+.add-item {
   width: auto;
   padding: 3px 6px;
 }
